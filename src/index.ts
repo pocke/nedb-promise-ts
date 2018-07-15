@@ -46,7 +46,7 @@ export default class Datastore {
     this.original.getCandidates(query);
   }
 
-  insert<T>(newDoc: any): Promise<T> {
+  insert<T>(newDoc: T): Promise<T> {
     return this.promisify(this.original.insert.bind(this, newDoc)) as Promise<T>;
   }
 
