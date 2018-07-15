@@ -50,12 +50,15 @@ export default class Datastore {
     return this.promisify(this.original.insert.bind(this, newDoc)) as Promise<T>;
   }
 
-  // TODO: Support cursor style.
   async count(query: any) {
     return this.promisify(this.original.count.bind(this, query));
   }
 
-  // TODO: Support cursor style.
+  countWithCursor(query: any): CursorCount {
+    const cursor = this.original.count(query);
+    return new CursorCount(cursor);
+  }
+
   async find(query: any, projection?: any) {
     const f = projection
       ? this.original.find.bind(this.original, query, projection)
@@ -63,6 +66,12 @@ export default class Datastore {
     return this.promisify(f);
   }
 
+  findWithCursor(query: any, projection?: any): Cursor {
+    const cursor = projection ? this.original.find(query, projection) : this.original.find(query);
+    return new Cursor(cursor);
+  }
+
+  // TODO: Support cursor style.
   async findOne(query: any, projection?: any) {
     const f = projection
       ? this.original.findOne.bind(this.original, query, projection)
@@ -97,6 +106,54 @@ export default class Datastore {
           } else {
             resolve(...result);
           }
+        }
+      });
+    });
+  }
+}
+
+class Cursor {
+  constructor(private original: Nedb.Cursor<any>) {}
+
+  sort(query: any): Cursor {
+    return new Cursor(this.original.sort(query));
+  }
+
+  skip(n: number): Cursor {
+    return new Cursor(this.original.skip(n));
+  }
+
+  limit(n: number): Cursor {
+    return new Cursor(this.original.limit(n));
+  }
+
+  projection(query: any): Cursor {
+    return new Cursor(this.original.projection(query));
+  }
+
+  exec(): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      this.original.exec((err, docs: any[]) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(docs);
+        }
+      });
+    });
+  }
+}
+
+class CursorCount {
+  constructor(private original: Nedb.CursorCount) {}
+
+  exec(): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.original.exec((err, docs: number) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(docs);
         }
       });
     });
