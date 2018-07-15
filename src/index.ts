@@ -46,6 +46,10 @@ export default class Datastore {
     this.original.getCandidates(query);
   }
 
+  insert<T>(newDoc: any): Promise<T> {
+    return this.promisify(this.original.insert.bind(this, newDoc)) as Promise<T>;
+  }
+
   // TODO: Support cursor style.
   async count(query: any) {
     return this.promisify(this.original.count.bind(this, query));
