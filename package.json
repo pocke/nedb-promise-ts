@@ -4,7 +4,8 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,18 @@
   "bugs": {
     "url": "https://github.com/pocke/nedb-promise-ts/issues"
   },
-  "homepage": "https://github.com/pocke/nedb-promise-ts#readme"
+  "homepage": "https://github.com/pocke/nedb-promise-ts#readme",
+  "dependencies": {
+    "nedb": "^1.8.0"
+  },
+  "devDependencies": {
+    "@types/nedb": "^1.8.5",
+    "prettier": "^1.13.7",
+    "typescript": "^2.9.2"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 120
+  }
 }
